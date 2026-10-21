@@ -30,6 +30,28 @@ int main() {
 		exit(1);
 	}
 
-	printf("%s\n", rbuf.mtext);
-	exit(0);
+	printf("Proceso 2 recibe: %s\n", rbuf.mtext);
+
+        sbuf.mtype = 2;
+        strcpy(sbuf.mtext, "Loud and clear");
+        buf_length = strlen(sbuf.mtext) + 1;
+
+        if (msgsnd(msqid, &sbuf, buf_length, 0) < 0) {
+                perror("msgsnd");
+                exit(1);
+        }
+
+        printf("Proceso 2 envia: %s\n", sbuf.mtext);
+
+        strcpy(sbuf.mtext, "I can hear you too");
+        buf_length = strlen(sbuf.mtext) + 1;
+
+        if (msgsnd(msqid, &sbuf, buf_length, 0) < 0) {
+                perror("msgsnd");
+                exit(1);
+        }
+
+        printf("Proceso 2 envia: %s\n", sbuf.mtext);
+
+        exit(0);
 }

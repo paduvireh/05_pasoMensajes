@@ -28,12 +28,29 @@ int main() {
 	}
 
 	sbuf.mtype = 1;
-	(void)strcpy(sbuf.mtext, "Are you hearing me?");
+	strcpy(sbuf.mtext, "Are you hearing me?");
 	buf_length = strlen(sbuf.mtext) + 1;
 
-	if (msgsnd(msqid, &sbuf, buf_length, IPC_NOWAIT) < 0) {
+        if (msgsnd(msqid, &sbuf, buf_length, 0) < 0) {
 		perror("msgsnd");
 		exit(1);
 	}
+
+        printf("Proceso 1 envia: %s\n", sbuf.mtext);
+
+        if (msgrcv(msqid, &rbuf, MSGSZ, 2, 0) < 0) {
+                perror("msgrcv");
+                exit(1);
+        }
+
+        printf("Proceso 1 recibe: %s\n", rbuf.mtext);
+
+        if (msgrcv(msqid, &rbuf, MSGSZ, 2, 0) < 0) {
+                perror("msgrcv");
+                exit(1);
+        }
+
+        printf("Proceso 1 recibe: %s\n", rbuf.mtext);
+
 	exit(0);
 }
